@@ -13,7 +13,7 @@ app.secret_key = os.environ.get("SECRET_KEY", "officehours-dev-secret")
 app.config["SESSION_COOKIE_HTTPONLY"] = True
 app.config["SESSION_COOKIE_SAMESITE"] = 'Strict'
 app.config["SESSION_COOKIE_SECURE"] = True   
-app.config["SESSION_COOKIE_NAME"] = "hold_flash"
+app.config["SESSION_COOKIE_NAME"] = "hold_session"
 
 
 def current_user():
@@ -35,7 +35,7 @@ def login_required(fn):
 def load_user():
     init_db()
     seed()
-    token = request.args.get("sid") or request.cookies.get("hold_session")
+    token = request.cookies.get("hold_session")
     g.user = None
     g.session_token = None
     if not token:
@@ -76,7 +76,7 @@ def inject_user():
 
 
 def create_session(user_id):
-    token = secrets.token_hex(24)
+    token = secrets.token_urlsafe(32)
     conn = get_db()
     conn.execute("INSERT INTO sessions (token, user_id) VALUES (?, ?)", (token, user_id))
     conn.commit()
