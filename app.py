@@ -10,7 +10,7 @@ from seed import seed
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY", "officehours-dev-secret")
-app.config["SESSION_COOKIE_HTTPONLY"] = False
+app.config["SESSION_COOKIE_HTTPONLY"] = True
 app.config["SESSION_COOKIE_SAMESITE"] = None
 app.config["SESSION_COOKIE_NAME"] = "hold_flash"
 
@@ -60,7 +60,7 @@ def persist_session_cookie(response):
         response.set_cookie(
             "hold_session",
             g.session_token,
-            httponly=False,
+            httponly=True,
             samesite=None,
             path="/",
             max_age=60 * 60 * 24 * 14,
